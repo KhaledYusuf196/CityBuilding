@@ -3,6 +3,8 @@
 
 #include "CameraControlComponent.h"
 
+#include "GameFramework/SpringArmComponent.h"
+
 // Sets default values for this component's properties
 UCameraControlComponent::UCameraControlComponent()
 {
@@ -21,7 +23,7 @@ void UCameraControlComponent::BeginPlay()
 
 	if(CameraRootComponent == nullptr)
 	{
-		CameraRootComponent = GetOwner()->GetRootComponent();
+		UE_LOG(LogTemp, Error, TEXT("CameraRootComponent not found"));
 	}
 }
 
@@ -31,25 +33,32 @@ void UCameraControlComponent::TickComponent(float DeltaTime, ELevelTick TickType
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	MoveCamera(MovementInput);
-	RotateCamera(RotationInput);
+	MoveCamera(MovementInput, DeltaTime);
+	RotateCamera(RotationInput, DeltaTime);
+	ZoomCamera(ZoomInput);
 	MovementInput = RotationInput = FVector2D::Zero();
+	ZoomInput = 0;
 }
 
-void UCameraControlComponent::MoveCamera(FVector2D Direction) const
+void UCameraControlComponent::MoveCamera(FVector2D Direction, float DeltaTime) const
 {
 	AActor* Owner = GetOwner();
 	const FVector MovementDirection = FVector(Direction.X, Direction.Y, 0);
-	const FVector NewLocation = Owner->GetActorLocation() + Owner->GetTransform().TransformVector(MovementDirection);
+	const FVector NewLocation = Owner->GetActorLocation() + Owner->GetTransform().TransformVector(MovementDirection) * MovementSpeed * DeltaTime;
 	Owner->SetActorLocation(NewLocation);
 }
 
-void UCameraControlComponent::RotateCamera(FVector2D Rotation) const
+void UCameraControlComponent::RotateCamera(FVector2D Rotation, float DeltaTime) const
 {
-	const FRotator YawRotation = FRotator(0,Rotation.X,0);
-	const FRotator PitchRotation = FRotator(Rotation.Y,0,0);
+	const FRotator YawRotation = FRotator(0,Rotation.X * RotationSpeed * DeltaTime,0);
+	const FRotator PitchRotation = FRotator(Rotation.Y * RotationSpeed * DeltaTime,0,0);
 	GetOwner()->GetRootComponent()->AddRelativeRotation(YawRotation);
 	CameraRootComponent->AddLocalRotation(PitchRotation);
 	
+}
+
+void UCameraControlComponent::ZoomCamera(const float Zoom) const
+{
+	CameraRootComponent->TargetArmLength = FMath::Clamp(CameraRootComponent->TargetArmLength + Zoom * ZoomDistanceStep, MinZoomDistance, MaxZoomDistance);
 }
 

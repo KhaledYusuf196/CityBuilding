@@ -40,6 +40,8 @@ void ACameraPawn::Tick(float DeltaTime)
 
 
 	CameraControlComponent->SetMovementInput(MovementInput);
+	CameraControlComponent->SetZoomInput(ZoomValue);
+	ZoomValue = 0;
 	if(bIsRotationActive)
 	{
 		CameraControlComponent->SetRotationInput(RotationInput);
