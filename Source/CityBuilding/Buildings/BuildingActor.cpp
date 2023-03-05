@@ -23,18 +23,33 @@ void ABuildingActor::BeginPlay()
 {
 	Super::BeginPlay();
 	BuildingActionComponent = FindComponentByClass<UBuildingActionComponent>();
+	OnClicked.AddDynamic(this, &ABuildingActor::OnClickBuilding);
+}
+
+void ABuildingActor::OnClickBuilding(AActor* TouchedActor, FKey ButtonPressed)
+{
+	if(bIsSelected)
+	{
+		DeselectBuilding();
+	}
+	else
+	{
+		SelectBuilding();
+	}
 }
 
 
-void ABuildingActor::SelectBuilding() const
+void ABuildingActor::SelectBuilding() 
 {
 	if(!ensure(BuildingActionComponent != nullptr)) return;
 	BuildingActionComponent->OnSelected();
+	bIsSelected = true;
 }
 
-void ABuildingActor::DeselectBuilding() const
+void ABuildingActor::DeselectBuilding() 
 {
 	if(!ensure(BuildingActionComponent != nullptr)) return;
 	BuildingActionComponent->OnDeselected();
+	bIsSelected = false;
 }
 

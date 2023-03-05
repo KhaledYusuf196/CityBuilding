@@ -27,7 +27,20 @@ ACameraPawn::ACameraPawn()
 void ACameraPawn::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	SetupInputMode();
+}
+
+void ACameraPawn::SetupInputMode()
+{
+	APlayerController* PlayerController = Cast<APlayerController>(GetController());
+	if (PlayerController == nullptr) return;
+
+	FInputModeGameAndUI InputMode;
+	InputMode.SetHideCursorDuringCapture(false);
+	InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::LockOnCapture);
+	PlayerController->SetInputMode(InputMode);
+	PlayerController->SetShowMouseCursor(true);
+	PlayerController->bEnableClickEvents = true;
 }
 
 // Called every frame
@@ -36,13 +49,13 @@ void ACameraPawn::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	FVector2D MovementInput(ForwardValue, RightValue);
-	FVector2D RotationInput(PitchValue,YawValue);
+	FVector2D RotationInput(PitchValue, YawValue);
 
 
 	CameraControlComponent->SetMovementInput(MovementInput);
 	CameraControlComponent->SetZoomInput(ZoomValue);
 	ZoomValue = 0;
-	if(bIsRotationActive)
+	if (bIsRotationActive)
 	{
 		CameraControlComponent->SetRotationInput(RotationInput);
 	}
@@ -52,6 +65,4 @@ void ACameraPawn::Tick(float DeltaTime)
 void ACameraPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-	
 }
-

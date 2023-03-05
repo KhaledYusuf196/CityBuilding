@@ -61,5 +61,5 @@ private:
 
 public:
 	UPROPERTY()
-	class USpringArmComponent* CameraRootComponent;
+	USpringArmComponent* CameraRootComponent;
 };

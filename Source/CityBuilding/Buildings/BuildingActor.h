@@ -19,11 +19,14 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UFUNCTION()
+	void OnClickBuilding(AActor* TouchedActor, FKey ButtonPressed);
+
 public:	
 
-	void SelectBuilding() const;
+	void SelectBuilding();
 
-	void DeselectBuilding() const;
+	void DeselectBuilding();
 
 private:
 	UPROPERTY(VisibleAnywhere)
@@ -34,5 +37,7 @@ private:
 
 	UPROPERTY()
 	class UBuildingActionComponent* BuildingActionComponent;
+
+	bool bIsSelected;
 
 };

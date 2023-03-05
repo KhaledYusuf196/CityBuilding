@@ -19,6 +19,9 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	//TODO: Move to a PlayerController if needed
+	void SetupInputMode();
+
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
