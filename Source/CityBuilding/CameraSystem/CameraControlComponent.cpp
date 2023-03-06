@@ -50,10 +50,14 @@ void UCameraControlComponent::MoveCamera(FVector2D Direction, float DeltaTime) c
 
 void UCameraControlComponent::RotateCamera(FVector2D Rotation, float DeltaTime) const
 {
+
+	double Pitch = Rotation.Y * RotationSpeed * DeltaTime + CameraRootComponent->GetRelativeRotation().Pitch;
+	Pitch = FMath::Clamp(Pitch, -60.0, -30.0);
+	const FRotator PitchRotation = FRotator(Pitch,0,0);
+	CameraRootComponent->SetRelativeRotation(PitchRotation);
+
 	const FRotator YawRotation = FRotator(0,Rotation.X * RotationSpeed * DeltaTime,0);
-	const FRotator PitchRotation = FRotator(Rotation.Y * RotationSpeed * DeltaTime,0,0);
 	GetOwner()->GetRootComponent()->AddRelativeRotation(YawRotation);
-	CameraRootComponent->AddLocalRotation(PitchRotation);
 	
 }
 
