@@ -4,6 +4,8 @@
 #include "CameraPawn.h"
 
 #include "CameraControlComponent.h"
+#include "Camera/CameraComponent.h"
+#include "CityBuilding/FunctionalPlacement/BuildingSpawnerComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 
 
@@ -15,11 +17,15 @@ ACameraPawn::ACameraPawn()
 
 	DefaultSceneRoot = CreateDefaultSubobject<USceneComponent>(TEXT("DefaultSceneRoot"));
 	CameraRootComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraRoot"));
+	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
+	
 
 	CameraControlComponent = CreateDefaultSubobject<UCameraControlComponent>(TEXT("CameraControl"));
-
+	BuildingSpawnerComponent = CreateDefaultSubobject<UBuildingSpawnerComponent>(TEXT("BuildingSpawner"));
+	
 	RootComponent = DefaultSceneRoot;
 	CameraRootComponent->SetupAttachment(RootComponent);
+	CameraComponent->SetupAttachment(CameraRootComponent);
 	CameraControlComponent->CameraRootComponent = CameraRootComponent;
 }
 

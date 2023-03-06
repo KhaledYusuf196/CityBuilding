@@ -55,8 +55,14 @@ protected:
 	USceneComponent* DefaultSceneRoot;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	class USpringArmComponent* CameraRootComponent;
+
+	UPROPERTY(VisibleAnywhere)
+	class UCameraComponent* CameraComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class UCameraControlComponent* CameraControlComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	class USpringArmComponent* CameraRootComponent;
+	class UBuildingSpawnerComponent* BuildingSpawnerComponent;
 };
