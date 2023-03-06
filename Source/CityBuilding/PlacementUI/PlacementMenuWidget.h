@@ -21,6 +21,8 @@ public:
 
 	void AddPlacementMenuItem(UUserWidget* Item);
 
+	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
+
 private:
 	UPROPERTY(meta = (BindWidget))
 	class UButton* PlacementMenuButton;
