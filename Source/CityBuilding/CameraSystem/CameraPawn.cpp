@@ -5,8 +5,10 @@
 
 #include "CameraControlComponent.h"
 #include "Camera/CameraComponent.h"
+#include "CityBuilding/Buildings/BuildingActor.h"
 #include "CityBuilding/FunctionalPlacement/BuildingSpawnerComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 
 // Sets default values
@@ -55,7 +57,7 @@ void ACameraPawn::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	FVector2D MovementInput(ForwardValue, RightValue);
-	FVector2D RotationInput(PitchValue, YawValue);
+	FVector2D RotationInput(YawValue, PitchValue);
 
 
 	CameraControlComponent->SetMovementInput(MovementInput);
@@ -71,4 +73,21 @@ void ACameraPawn::Tick(float DeltaTime)
 void ACameraPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
+
+	PlayerInputComponent->BindAxis("Horizontal", this, &ACameraPawn::SetRightValue);
+	PlayerInputComponent->BindAxis("Vertical", this, &ACameraPawn::SetForwardValue);
+	PlayerInputComponent->BindAxis("Yaw", this, &ACameraPawn::SetYawValue);
+	PlayerInputComponent->BindAxis("Pitch", this, &ACameraPawn::SetPitchValue);
+	PlayerInputComponent->BindAxis("Zoom", this, &ACameraPawn::AddZoomInput);
+	PlayerInputComponent->BindAction("ToggleZoom", IE_Pressed, this, &ACameraPawn::ActivateRotation);
+	PlayerInputComponent->BindAction("ToggleZoom", IE_Released, this, &ACameraPawn::DeactivateRotation);
+	PlayerInputComponent->BindAction("BuilderAction", IE_Pressed, this, &ACameraPawn::AddBuilding);
+}
+
+void ACameraPawn::AddBuilding()
+{
+	FHitResult HitResult;
+	if(!GetWorld()->GetFirstPlayerController()->GetHitResultUnderCursor(ECC_Visibility, true, HitResult)) return;
+	if(HitResult.GetActor()->IsA<ABuildingActor>()) return;
+	BuildingSpawnerComponent->SpawnBuilding(HitResult.Location);
 }

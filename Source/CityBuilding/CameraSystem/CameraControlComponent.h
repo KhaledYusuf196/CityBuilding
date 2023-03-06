@@ -45,7 +45,7 @@ private:
 	float ZoomInput;
 
 	UPROPERTY(EditAnywhere)
-	float MovementSpeed = 10;
+	float MovementSpeed = 300;
 
 	UPROPERTY(EditAnywhere)
 	float RotationSpeed = 180;

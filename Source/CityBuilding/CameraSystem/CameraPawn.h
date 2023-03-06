@@ -29,11 +29,23 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	UFUNCTION(BlueprintCallable)
+	void AddBuilding();
+	
 	void AddZoomInput(const float Input) { ZoomValue += -Input; }
 
-protected:
+	void SetForwardValue(float Forward) { ForwardValue = Forward; }
 
+	void SetRightValue(float Right) { RightValue = Right; }
+
+	void SetPitchValue(float Pitch) { PitchValue = Pitch; }
+
+	void SetYawValue(float Yaw) { YawValue = Yaw; }
+
+	void ActivateRotation() { bIsRotationActive = true; }
+	
+	void DeactivateRotation() { bIsRotationActive = false; }
+
+protected:
 	UPROPERTY(BlueprintReadWrite)
 	float ForwardValue;
 
@@ -45,7 +57,7 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite)
 	float YawValue;
-	
+
 	float ZoomValue;
 
 	UPROPERTY(BlueprintReadWrite)
@@ -53,7 +65,7 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	USceneComponent* DefaultSceneRoot;
-	
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class USpringArmComponent* CameraRootComponent;
 
